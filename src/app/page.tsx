@@ -1,100 +1,89 @@
 import Image from "next/image";
+import { Button } from "./_components/ui/button";
+import { FileCode2, HardHat, Hotel, LockKeyholeOpen, UsersRound } from "lucide-react";
+import { Card, CardContent } from "./_components/ui/card";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+    <div>
+      <header className="">
         <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+          height={18}
+          width={120}
+          alt="Imob-logo"
+          src="/imob-logo.png"
+          className="m-auto pt-8"
         />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+      </header>
+      <main className="flex-col items-center w-[90%] mx-auto">
+        {/* Mensagens */}
+        <div className="my-5  text-center">
+          <h1 className="text-3xl text-primary font-bold ">O seu Gestor de Imóveis Simplificado!</h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          <h3 className="my-5 text-gray-400 font-semibold">Gerencie seus imóveis e inquilinos de forma simples e eficiente. Tudo em um só lugar, acessível para todos.</h3>
+
+          <h2 className="text-xl font-bold my-8">Descubra Nossos Recursos</h2>
+        </div>
+
+        {/* CARDS */}
+        <div className="mb-6 flex justify-center gap-5 flex-wrap">
+          <Card className="w-[45%] h-[280px] flex-col">
+            <CardContent className="p-3">
+              <Hotel className="text-primary mb-3" width={28} height={28} />
+
+
+              <p className="text-sm font-semibold mb-2">Cadastro de Imóveis</p>
+              <p className="text-sm text-gray-400">Cadastre seus imóveis com todas as informações necessárias.</p>
+              <p className="text-sm text-gray-400">Adicione endereço, características, fotos e documentos de cada imóvel de forma organizada.</p>
+            </CardContent>
+          </Card>
+
+          <Card className="w-[45%] h-[280px] flex-col">
+            <CardContent className="p-3">
+              <UsersRound className="text-primary mb-3" width={28} height={28} />
+
+
+              <p className="text-sm font-semibold mb-2">Gestão de Inquilinos</p>
+              <p className="text-sm text-gray-400">Vincule inquilinos aos imóveis e gerencie contratos.</p>
+              <p className="text-sm text-gray-400">Mantenha os dados dos inquilinos atualizados e acompanhe o histórico de ocupação dos imóveis.</p>
+            </CardContent>
+          </Card>
+
+          <Card className="w-[45%] h-[280px] flex-col">
+            <CardContent className="p-3">
+              <FileCode2 className="text-primary mb-3" width={28} height={28} />
+
+
+              <p className="text-sm font-semibold mb-2">Documentos & Contratos</p>
+              <p className="text-sm text-gray-400">Imprima contratos, boletos e documentos essenciais diretamente pelo app, com facilidade.</p>
+            </CardContent>
+          </Card>
+
+          <Card className="w-[45%] h-[280px] flex-col">
+            <CardContent className="p-3">
+              <HardHat className="text-primary mb-3" width={28} height={28} />
+
+
+              <p className="text-sm font-semibold mb-2">Pedidos de Materiais</p>
+              <p className="text-sm text-gray-400">Faça e acompanhe pedidos de materiais para reformas rapidamente, sem perder o controle.</p>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="text-center mb-10">
+          <Link href="/login">
+            <Button className="w-[90%] ">
+              <LockKeyholeOpen />Entrar ou Cadastrar-se
+            </Button>
+          </Link>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      <footer>
+        <Card className="md:mt-20">
+          <CardContent className="px-5 py-6 text-center">
+            <p className="text-sm text-gray-400">© 2025 Copyright <span className="font-bold">Imob.</span></p>
+          </CardContent>
+        </Card>
       </footer>
     </div>
   );

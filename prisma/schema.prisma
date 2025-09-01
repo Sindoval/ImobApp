@@ -1,0 +1,141 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id                String   @id @default(cuid())
+  nome              String
+  email             String   @unique
+  senhaHash         String
+  ativo             Boolean  @default(true)
+  roleId            String
+  role              Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  engenheiroImoveis Imovel[] @relation("ImovelEngenheiro")
+  pedidosCriados    Pedido[] @relation("PedidosCriados")
+  pedidosAprovados  Pedido[] @relation("PedidosAprovados")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Role {
+  id        String    @id @default(cuid())
+  nome      String    @unique
+  usuarios  Usuario[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Imovel {
+  id           String         @id @default(cuid())
+  endereco     String
+  valorCompra  Float
+  valorVenda   Float?
+  status       String
+  engenheiroId String
+  engenheiro   Usuario        @relation("ImovelEngenheiro", fields: [engenheiroId], references: [id], onDelete: Cascade)
+  imagens      ImovelImagem[]
+  pedidos      Pedido[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model ImovelImagem {
+  id        String   @id @default(cuid())
+  imovelId  String
+  imovel    Imovel   @relation(fields: [imovelId], references: [id], onDelete: Cascade)
+  url       String
+  descricao String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Pedido {
+  id            String       @id @default(cuid())
+  descricao     String
+  status        String
+  imovelId      String
+  imovel        Imovel       @relation(fields: [imovelId], references: [id], onDelete: Cascade)
+  criadoPorId   String
+  criadoPor     Usuario      @relation("PedidosCriados", fields: [criadoPorId], references: [id], onDelete: Cascade)
+  aprovadoPorId String?
+  aprovadoPor   Usuario?     @relation("PedidosAprovados", fields: [aprovadoPorId], references: [id], onDelete: SetNull)
+  itens         PedidoItem[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model PedidoItem {
+  id         String   @id @default(cuid())
+  pedidoId   String
+  pedido     Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
+  produtoId  String
+  produto    Produto  @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  quantidade Int
+  precoUnit  Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Produto {
+  id                 String              @id @default(cuid())
+  nome               String
+  descricao          String?
+  unidade            String
+  estoque            Estoque?
+  itensPedido        PedidoItem[]
+  fornecedorProdutos FornecedorProduto[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+}
+
+model Estoque {
+  id         String   @id @default(cuid())
+  produtoId  String   @unique
+  produto    Produto  @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  quantidade Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Fornecedor {
+  id                  String              @id @default(cuid())
+  nome                String
+  contato             String?
+  orcamentos          Orcamento[]
+  produtosDisponiveis FornecedorProduto[]
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+}
+
+model FornecedorProduto {
+  id           String     @id @default(cuid())
+  fornecedorId String
+  fornecedor   Fornecedor @relation(fields: [fornecedorId], references: [id], onDelete: Cascade)
+  produtoId    String
+  produto      Produto    @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  preco        Float
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Orcamento {
+  id           String     @id @default(cuid())
+  descricao    String
+  valor        Float
+  fornecedorId String
+  fornecedor   Fornecedor @relation(fields: [fornecedorId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
