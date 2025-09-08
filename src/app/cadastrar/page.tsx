@@ -19,7 +19,6 @@ const Cadastrar = () => {
         <p className="font-semibold text-gray-400">Acesse sua conta para gerenciar seus imóveis</p>
       </main>
       <RegisterForm />
-
     </div>
   );
 }

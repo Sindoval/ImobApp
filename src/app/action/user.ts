@@ -22,11 +22,7 @@ export const userRegister = async (nome: string, email: string, senha: string, r
       nome,
       email,
       senhaHash: senha,
-      role: {
-        connect: {
-          id: role.id
-        }
-      }
+      roleId: role.id
     }
   });
 

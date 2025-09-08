@@ -6,9 +6,7 @@ import z from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { userVerify } from "../action/user";
 import { useRouter } from "next/navigation";
-
 
 const loginSchema = z.object({
   email: z
@@ -32,15 +30,19 @@ const LoginForm = () => {
   })
 
   const handleSubmit = async (values: z.infer<typeof loginSchema>) => {
-    const isValid = await userVerify(values.email, values.senha);
+    const res = await fetch("/api/users/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values),
+      credentials: "include",
+    })
 
-    if (isValid) {
-      console.log("Login bem-sucedido!");
+    if (res.ok) {
+      console.log("aaaaaaaaaaaaaa");
       router.push("/homepage")
-
     } else {
-      console.log("Email ou senha inválidos");
-
+      const json = await res.json();
+      alert(json.error);
     }
   };
 
