@@ -7,6 +7,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { toast } from "sonner";
 
 const loginSchema = z.object({
   email: z
@@ -38,11 +40,9 @@ const LoginForm = () => {
     })
 
     if (res.ok) {
-      console.log("aaaaaaaaaaaaaa");
       router.push("/homepage")
     } else {
-      const json = await res.json();
-      alert(json.error);
+      toast.error("Email ou senha incorretos")
     }
   };
 
@@ -51,7 +51,7 @@ const LoginForm = () => {
   return (
     <Form {...form}>
       <form
-        className="w-[80%] h-[300px] flex-col gap-5"
+        className="w-[80%] h-[300px] flex-col gap-4"
         onSubmit={form.handleSubmit(handleSubmit)}
       >
         <FormField
@@ -77,10 +77,15 @@ const LoginForm = () => {
                 <Input placeholder="********" type="password"{...field} />
               </FormControl>
               <FormMessage />
+              <div className="flex justify-end pt-0 pb-2">
+                <Link href="/recuperar-senha">
+                  <span className="text-primary">Recuperara senha</span>
+                </Link>
+              </div>
             </FormItem>
+
           )}
         />
-
         <Button
           type="submit"
           className="w-[100%]"

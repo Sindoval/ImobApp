@@ -37,6 +37,14 @@ model Role {
   updatedAt DateTime  @updatedAt
 }
 
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
 model Imovel {
   id           String         @id @default(cuid())
   endereco     String

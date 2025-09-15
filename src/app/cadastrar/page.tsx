@@ -1,18 +1,10 @@
-import Image from "next/image";
 import RegisterForm from "../_components/registerForm";
+import Header from "../_components/header";
 
 const Cadastrar = () => {
   return (
     <div className="flex flex-col items-center">
-      <header className="">
-        <Image
-          height={18}
-          width={120}
-          alt="Imob-logo"
-          src="/imob-logo.png"
-          className="m-auto pt-8"
-        />
-      </header>
+      <Header />
 
       <main className="text-center py-10">
         <h1 className="text-2xl font-bold">Crie sua conta</h1>
