@@ -49,7 +49,7 @@ function RegisterForm() {
           })
         });
 
-        router.push("/homepage");
+        router.push("/imoveis");
       }
 
     } catch (error) {
@@ -79,7 +79,7 @@ function RegisterForm() {
             <FormItem className="mb-5">
               <FormLabel>E-mail</FormLabel>
               <FormControl>
-                <Input placeholder="seu@email.com" type="email" {...field} />
+                <Input placeholder="email@email.com" type="email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

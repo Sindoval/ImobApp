@@ -1,8 +1,17 @@
 import LoginForm from "../_components/loginForm";
 import Link from "next/link";
 import Header from "../_components/header";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 const Login = async () => {
+
+  const cookieStore = cookies();
+  const token = cookieStore.get("token")?.value;
+
+  if (token) {
+    redirect("/imoveis")
+  }
 
   return (
     <div className="flex flex-col items-center">

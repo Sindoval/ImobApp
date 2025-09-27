@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
+import { LogOutIcon } from "lucide-react";
 
 const LogoutButton = () => {
   const router = useRouter();
@@ -19,7 +20,9 @@ const LogoutButton = () => {
     <Button
       variant="destructive"
       onClick={handleLogout}
-    >Sair</Button>
+    >
+      <LogOutIcon />
+      Sair da conta</Button>
   );
 }
 

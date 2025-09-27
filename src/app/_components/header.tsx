@@ -3,6 +3,8 @@ import { Card, CardContent } from "./ui/card";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { MenuIcon } from "lucide-react";
+import { Sheet, SheetTrigger } from "./ui/sheet";
+import SidebarButton from "./imob-sheet";
 
 const Header = () => {
   return (
@@ -16,9 +18,15 @@ const Header = () => {
             width={110}
           />
         </Link>
-        <Button variant="ghost" >
-          <MenuIcon />
-        </Button>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" >
+              <MenuIcon />
+            </Button>
+          </SheetTrigger>
+          <SidebarButton />
+        </Sheet>
+
       </CardContent>
     </Card>
   );

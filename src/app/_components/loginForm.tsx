@@ -40,13 +40,11 @@ const LoginForm = () => {
     })
 
     if (res.ok) {
-      router.push("/homepage")
+      router.push("/imoveis")
     } else {
       toast.error("Email ou senha incorretos")
     }
   };
-
-
 
   return (
     <Form {...form}>

@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   if (!isPasswordValid) return NextResponse.json({ error: "Usuário ou senha inválidos" }, { status: 401 });
 
   const token = jwt.sign(
-    { id: user.id, email: user.email, role: user.role.nome },
+    { id: user.id, email: user.email, nome: user.nome, role: user.role.nome },
     process.env.JWT_SECRET!,
     { expiresIn: "7d" }
   );
