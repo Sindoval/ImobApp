@@ -53,3 +53,15 @@
     @apply h-full bg-background text-foreground;
   }
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Edge, Safari */
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE e Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
