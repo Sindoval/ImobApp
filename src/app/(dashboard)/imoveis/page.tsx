@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Header from "../../_components/header";
 import { getImoveis } from "@/app/_actions/imoveis";
-import CardImovel from "@/app/_components/card-imovel";
+import ImoveisClient from "@/app/_components/imoveis-client";
 
 const Imoveis = async () => {
   const cookieStore = cookies();
@@ -18,14 +18,7 @@ const Imoveis = async () => {
       <Header />
       <h1 className="text-2xl font-bold text-gray-200 py-3">Imóveis</h1>
 
-      {/* Imóveis */}
-      <div className="flex-1 w-[90%] flex-col gap-3 overflow-y-auto no-scrollbar">
-        {imoveis.map((imovel) => (
-          <CardImovel
-            key={imovel.id}
-            imovel={imovel} />
-        ))}
-      </div>
+      <ImoveisClient imoveis={imoveis} />
     </div>
   );
 }
