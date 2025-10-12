@@ -9,7 +9,7 @@ interface CardEstoqueProps {
 const CardEstoque = ({ estoqueItem }: CardEstoqueProps) => {
   const { quantidade, produto } = estoqueItem;
   return (
-    <Card className="w-full h-[40%] mb-3 p-7">
+    <Card className="w-full h-[45%] mb-3 p-7">
       <div className="">
         <h2 className="text-lg font-semibold text-gray-200">{produto.nome}</h2>
         <div className="mt-5">
@@ -18,7 +18,7 @@ const CardEstoque = ({ estoqueItem }: CardEstoqueProps) => {
           <p className="text-gray-400 mt-2">{produto.descricao}</p>
         </div>
         <hr className="w-full my-3" />
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-end my-auto gap-2 mt-6">
           <Button variant="secondary">Editar</Button>
           <Button variant="destructive">Remover</Button>
         </div>
