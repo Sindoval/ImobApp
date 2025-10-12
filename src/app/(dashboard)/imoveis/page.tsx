@@ -16,7 +16,8 @@ const Imoveis = async () => {
   return (
     <div className="flex flex-col items-center h-screen">
       <Header />
-      <h1 className="text-2xl font-bold text-gray-200 py-3">Imóveis</h1>
+      <h1 className="text-2xl font-bold text-gray-200 my-4">Imóveis</h1>
+      <hr className="w-full" />
 
       <ImoveisClient imoveis={imoveis} />
     </div>
