@@ -2,6 +2,8 @@ import { getEstoque } from "@/app/_actions/estoque";
 import EstoqueClient from "@/app/_components/estoqueClient";
 import Header from "@/app/_components/header";
 
+export const dynamic = "force-dynamic"; // 🚀 desativa cache na Vercel
+
 const Estoque = async () => {
   const estoque = await getEstoque();
 

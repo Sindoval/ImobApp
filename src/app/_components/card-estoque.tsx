@@ -54,6 +54,7 @@ const CardEstoque = ({ estoqueItem }: CardEstoqueProps) => {
         quantidade: type === "subtrair" ? data.quantidade - quantidade : data.quantidade + quantidade
       }),
       credentials: "include",
+      cache: "no-store", // ⚡ impede cache da resposta
     });
       if (!response.ok) {
         toast.error("Erro ao atualizar o estoque");
@@ -154,5 +155,3 @@ const CardEstoque = ({ estoqueItem }: CardEstoqueProps) => {
 }
 
 export default CardEstoque;
-
-//Esta ação apagará permanentemente o imóvel e todos os dados associados. Você tem certeza que deseja continuar?
