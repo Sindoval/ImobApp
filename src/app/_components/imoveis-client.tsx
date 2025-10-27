@@ -34,7 +34,6 @@ const ImoveisClient = ({ imoveis }: ImoveisProps) => {
           variant="secondary"
           onClick={() => setIsDialogOpen(true)}
         >+ Adicionar Imóvel</Button>
-
       </div>
 
       {/* Imóveis */}

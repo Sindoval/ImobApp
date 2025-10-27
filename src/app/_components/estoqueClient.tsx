@@ -38,8 +38,16 @@ const EstoqueClient = ({ estoqueList }: EstoqueClientProps) => {
 
       <h2 className="text-xl font-bold text-gray-200 py-3">Itens no Estoque</h2>
 
+      <div className="w-[80%] my-4 ">
+              <Button
+                className="px-3"
+                variant="secondary"
+                //onClick={() => setIsDialogOpen(true)}
+              >+ Adicionar Produto ao Estoque</ Button>
+            </div>
+
       {/* lista do estoque */}
-      <div className="w-full h-[70%] flex-col mt-3 overflow-y-auto no-scrollbar">
+      <div className="w-full h-[70%] flex-col mt-10 overflow-y-auto no-scrollbar">
         {filteredList.length > 0 ? (
           filteredList.map((e) => (
             <CardEstoque
