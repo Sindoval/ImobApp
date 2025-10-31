@@ -3,9 +3,10 @@
 import { Funnel, Search } from "lucide-react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CardEstoque from "./card-estoque";
 import { EstoqueComProduto } from "../_types/estoque";
+import AddProductDialog from "./add-product-dialog";
 
 interface EstoqueClientProps {
   estoqueList: EstoqueComProduto[]
@@ -13,6 +14,17 @@ interface EstoqueClientProps {
 
 const EstoqueClient = ({ estoqueList }: EstoqueClientProps) => {
   const [search, setSearch] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [listaEstoque, setListaEstoque] = useState(estoqueList);
+
+  useEffect(() => {
+    setListaEstoque(estoqueList);
+  }, [listaEstoque]);
+
+  const handleAddEstoque = (novoEstoque: EstoqueComProduto) => {
+      setListaEstoque((prev) => [...prev, novoEstoque]);
+      setIsDialogOpen(false);
+    }
 
   const filteredList = useMemo(() => {
     const term = search.toLowerCase();
@@ -42,7 +54,7 @@ const EstoqueClient = ({ estoqueList }: EstoqueClientProps) => {
               <Button
                 className="px-3"
                 variant="secondary"
-                //onClick={() => setIsDialogOpen(true)}
+                onClick={() => setIsDialogOpen(true)}
               >+ Adicionar Produto ao Estoque</ Button>
             </div>
 
@@ -59,7 +71,11 @@ const EstoqueClient = ({ estoqueList }: EstoqueClientProps) => {
           <p className="text-gray-400 text-center mt-5">Nenhum item encontrado.</p>
         )}
       </div>
-
+        <AddProductDialog 
+          open={isDialogOpen}
+          onChangeOpen={setIsDialogOpen}
+          ondAdd={handleAddEstoque}
+          />
     </div>
   );
 }
