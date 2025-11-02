@@ -2,12 +2,11 @@
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from "./ui/dialog";
-import { Produto } from "@/generated/prisma";
 import { useState } from "react";
 import { Input } from "./ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select";
 import { Check, X } from "lucide-react";
 import { EstoqueComProduto } from "../_types/estoque";
+import { useRouter } from "next/navigation";
 
 interface AddProductDialogProps {
   open: boolean,
@@ -23,6 +22,7 @@ const AddProductDialog = ({ open, onChangeOpen, ondAdd }: AddProductDialogProps)
     quantidade: "",
   });
 
+  const router = useRouter();
 
   const handleSubmit = async () => {
     const { nome, descricao, unidade, quantidade } = form;
@@ -60,6 +60,7 @@ const AddProductDialog = ({ open, onChangeOpen, ondAdd }: AddProductDialogProps)
     });
 
     ondAdd(estoque);
+    router.refresh();
   }
 
   const onClickCancelar = () => {
@@ -73,7 +74,7 @@ const AddProductDialog = ({ open, onChangeOpen, ondAdd }: AddProductDialogProps)
   }
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={onChangeOpen}>
       <DialogContent className="w-[90%]">
         <DialogHeader>
           <DialogTitle>

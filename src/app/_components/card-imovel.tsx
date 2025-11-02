@@ -9,6 +9,7 @@ import { ArrowRight, Trash } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface CardImovelProps {
   imovel: Imovel
@@ -62,8 +63,12 @@ const CardImovel = ({ imovel }: CardImovelProps) => {
           <p className="text-sm font-semibold my-1">Valor de Compra: <span className="text-red-500">{imovel.valorCompra}</span></p>
           <p className="text-sm font-semibold">Valor de Venda: <span className="text-green-500">{imovel.valorVenda}</span></p>
         </div>
-
-        <Button className="w-full mt-5">Ver Detalhes <ArrowRight /></Button>
+        
+        <Button className="w-full mt-5" asChild>
+          <Link href={`/imoveis/${imovel.id}`}>
+          Ver Detalhes <ArrowRight />
+        </Link>
+          </Button>
       </CardContent>
 
       <Dialog open={isDialogOpen}>

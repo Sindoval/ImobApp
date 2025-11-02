@@ -79,7 +79,7 @@ const AddImovelDialog = ({ open, onChangeOpen, ondAdd }: AddImovelDialogProps) =
   }
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={onChangeOpen}>
       <DialogContent className="w-[90%]">
         <DialogHeader>
           <DialogTitle>

@@ -109,7 +109,7 @@ const CardEstoque = ({ estoqueItem }: CardEstoqueProps) => {
         </div>
 
       </div>
-      <Dialog open={isPrimaryDialog}>
+      <Dialog open={isPrimaryDialog} onOpenChange={setIsPrimaryDialog}>
               <DialogContent className="w-[80%]">
                 <DialogHeader>
                   <h1 className="text-xl font-bold">{titleDialog}</h1>
@@ -132,7 +132,7 @@ const CardEstoque = ({ estoqueItem }: CardEstoqueProps) => {
               </DialogContent>
             </Dialog>
 
-            <Dialog open={ isSecondaryDialog }>
+            <Dialog open={ isSecondaryDialog } onOpenChange={setIsSecondaryDialog}>
                     <DialogContent className="w-[80%]">
                       <DialogHeader>
                         <h1 className="text-xl font-bold">Confirmar Exclusão</h1>

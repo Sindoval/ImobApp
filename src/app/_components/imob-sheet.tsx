@@ -21,6 +21,8 @@ const SidebarButton = () => {
     const fetchUser = async () => {
       const user = await fetch("/api/users/me");
       const data = await user.json();
+      console.log({dadosUsuario: data});
+      
       setUser(data.user);
     }
     fetchUser();

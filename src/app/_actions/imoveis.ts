@@ -11,3 +11,15 @@ export async function getImoveis() {
     throw new Error("Erro ao buscar imóveis");
   }
 }
+
+export async function getImovelById(id: string) {
+  try {
+    const imovel = await db.imovel.findUnique({
+      where: { id }
+    });
+    return imovel;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Erro ao buscar imóvel");
+  }
+}
