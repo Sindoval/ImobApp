@@ -6,16 +6,17 @@ import { Button } from "./ui/button";
 import CardImovel from "./card-imovel";
 import { useEffect, useState } from "react";
 import AddImovelDialog from "./add-imovel-dialog";
+import { ImovelComImagens } from "../_types/estoque";
 
 interface ImoveisProps {
-  imoveis: Imovel[]
+  imoveis: ImovelComImagens[]
 }
 
 const ImoveisClient = ({ imoveis }: ImoveisProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [listaImoveis, setListaImoveis] = useState(imoveis);
 
-  const handleAddImovel = (novoImovel: Imovel) => {
+  const handleAddImovel = (novoImovel: ImovelComImagens) => {
     setListaImoveis((prev) => [...prev, novoImovel]);
     setIsDialogOpen(false);
   }

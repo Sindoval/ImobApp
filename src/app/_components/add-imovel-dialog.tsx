@@ -8,11 +8,12 @@ import { getUsers } from "../_actions/usuarios";
 import { Input } from "./ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select";
 import { Check, X } from "lucide-react";
+import { ImovelComImagens } from "../_types/estoque";
 
 interface AddImovelDialogProps {
   open: boolean,
   onChangeOpen: (open: boolean) => void
-  ondAdd: (imovel: Imovel) => void
+  ondAdd: (imovel: ImovelComImagens) => void
 }
 
 const AddImovelDialog = ({ open, onChangeOpen, ondAdd }: AddImovelDialogProps) => {
