@@ -18,6 +18,7 @@ interface AddImovelDialogProps {
 const AddImovelDialog = ({ open, onChangeOpen, ondAdd }: AddImovelDialogProps) => {
   const [form, setForm] = useState({
     endereco: "",
+    descricao: "",
     valorCompra: "",
     valorVenda: "",
     status: "planejamento",
@@ -28,18 +29,19 @@ const AddImovelDialog = ({ open, onChangeOpen, ondAdd }: AddImovelDialogProps) =
   useEffect(() => {
     const fetchEngenheiros = async () => {
       const usuarios = await getUsers();
-      const usuariosFilter = usuarios.filter((user) => user.roleId === "cmf0mbyjd0002vzqi6e6c7v1c");
+      const usuariosFilter = usuarios.filter((user) => user.roleId === "cmhs2nwy80001vz64dazjv99y");
       setEngenheirosList(usuariosFilter);
     }
     fetchEngenheiros();
   }, [])
 
   const handleSubmit = async () => {
-    const { endereco, valorCompra, valorVenda, status } = form;
+    const { endereco, descricao, valorCompra, valorVenda, status } = form;
     // API - POST
     const engenheiro = engenheirosList.find((eng) => eng.nome === form.eng_responsavel);
     const bodyPost = {
       endereco,
+      descricao,
       valorCompra: Number(valorCompra),
       valorVenda: Number(valorVenda),
       status,
@@ -58,6 +60,7 @@ const AddImovelDialog = ({ open, onChangeOpen, ondAdd }: AddImovelDialogProps) =
     onChangeOpen(false);
     setForm({
       endereco: "",
+      descricao: "",
       valorCompra: "",
       valorVenda: "",
       eng_responsavel: "",
@@ -71,6 +74,7 @@ const AddImovelDialog = ({ open, onChangeOpen, ondAdd }: AddImovelDialogProps) =
     onChangeOpen(false);
     setForm({
       endereco: "",
+      descricao: "",
       valorCompra: "",
       valorVenda: "",
       eng_responsavel: "",
@@ -96,6 +100,14 @@ const AddImovelDialog = ({ open, onChangeOpen, ondAdd }: AddImovelDialogProps) =
               placeholder="Rua Exemplo, 123, Bairro..."
               value={form.endereco}
               onChange={(e) => setForm({ ...form, endereco: e.target.value })}
+            />
+          </div>
+          <div className="space-y-1 py-2">
+            <p>Descrição do Imóvel</p>
+            <Input
+              placeholder="Casa de 3 Quartos, localizado..."
+              value={form.descricao}
+              onChange={(e) => setForm({ ...form, descricao: e.target.value })}
             />
           </div>
           <div className="space-y-1 py-2">

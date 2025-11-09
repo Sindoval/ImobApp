@@ -4,7 +4,11 @@ import { db } from "../_lib/prisma"
 
 export async function getImoveis() {
   try {
-    const imoveis = await db.imovel.findMany();
+    const imoveis = await db.imovel.findMany(
+      {
+        include: { imagens: true }
+      }
+    );
     return imoveis;
   } catch (error) {
     console.error(error);
@@ -14,10 +18,10 @@ export async function getImoveis() {
 
 export async function getImovelById(id: string) {
   try {
-    const imovel = await db.imovel.findUnique({
-      where: { id }
+    return await db.imovel.findUnique({
+      where: { id },
+      include: { imagens: true }
     });
-    return imovel;
   } catch (error) {
     console.error(error);
     throw new Error("Erro ao buscar imóvel");

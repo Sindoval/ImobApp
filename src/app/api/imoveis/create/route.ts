@@ -4,12 +4,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 export async function POST(req: NextRequest) {
-  const { endereco, valorCompra, valorVenda, status, engenheiroId } = await req.json();
+  const { endereco, descricao, valorCompra, valorVenda, status, engenheiroId } = await req.json();
 
   try {
     const imovel = await db.imovel.create({
       data: {
         endereco,
+        descricao,
         valorCompra,
         valorVenda,
         status,

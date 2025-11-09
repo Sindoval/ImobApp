@@ -1,6 +1,5 @@
 "use client"
 
-import { Imovel } from "@/generated/prisma";
 import { Card, CardContent } from "./ui/card";
 import Image from "next/image";
 import { Badge } from "./ui/badge";
@@ -10,9 +9,10 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader } from "./ui/dialog";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { ImovelComImagens } from "../_types/estoque";
 
 interface CardImovelProps {
-  imovel: Imovel
+  imovel: ImovelComImagens
 }
 
 const CardImovel = ({ imovel }: CardImovelProps) => {
@@ -38,7 +38,7 @@ const CardImovel = ({ imovel }: CardImovelProps) => {
       <div className="relative aspect-video w-full">
         <Image
           alt="imovel Image"
-          src="/imovel.jpg"
+          src={imovel.imagens?.[0]?.url || "/sem-foto.png"}
           className="rounded-md object-cover"
           fill
         />
@@ -63,12 +63,12 @@ const CardImovel = ({ imovel }: CardImovelProps) => {
           <p className="text-sm font-semibold my-1">Valor de Compra: <span className="text-red-500">{imovel.valorCompra}</span></p>
           <p className="text-sm font-semibold">Valor de Venda: <span className="text-green-500">{imovel.valorVenda}</span></p>
         </div>
-        
+
         <Button className="w-full mt-5" asChild>
           <Link href={`/imoveis/${imovel.id}`}>
-          Ver Detalhes <ArrowRight />
-        </Link>
-          </Button>
+            Ver Detalhes <ArrowRight />
+          </Link>
+        </Button>
       </CardContent>
 
       <Dialog open={isDialogOpen}>
