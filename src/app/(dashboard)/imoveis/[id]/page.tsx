@@ -5,11 +5,15 @@ import { getImovelById } from "@/app/_actions/imoveis";
 import { Badge } from "@/app/_components/ui/badge";
 import { Button } from "@/app/_components/ui/button";
 import { Card, CardContent, CardHeader } from "@/app/_components/ui/card";
-import { ArrowDown, Captions, ChevronLeft, FileText } from "lucide-react";
+import { ArrowDown, Captions, ChevronLeft, FileText, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import UploadImovelImagem from "@/app/_components/upload-imovel-imagem";
 import { ImovelComImagens } from "@/app/_types/estoque";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { ImovelImagem } from "@/generated/prisma";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/app/_components/ui/dialog";
 
 interface ImovelPageProps {
   params: { id: string };
@@ -19,6 +23,9 @@ export default function ImovelPage({ params }: ImovelPageProps) {
   const { id } = params;
   const [imovel, setImovel] = useState<ImovelComImagens | null>(null);
   const [mainImage, setMainImage] = useState<string | null>(null);
+  const [imagemSelecionada, setImagemSelecionada] = useState<ImovelImagem | null>(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const router = useRouter();
 
   async function fetchImovel() {
     const data = await getImovelById(id);
@@ -33,6 +40,19 @@ export default function ImovelPage({ params }: ImovelPageProps) {
   useEffect(() => {
     fetchImovel();
   }, []);
+
+  async function handleDeleteImagem(imagemId: string) {
+    const res = await fetch(`/api/imoveis/imagem/delete?id=${imagemId}`, {
+      method: "DELETE",
+    });
+    const data = await res.json();
+    if (data.ok) {
+      toast.success("Imagem excluída com sucesso!");
+      router.refresh();
+    } else {
+      toast.error(data.error || "Erro ao excluir imagem");
+    }
+  }
 
   if (!imovel) return <div className="text-center text-gray-300 mt-10">Carregando...</div>;
 
@@ -68,16 +88,29 @@ export default function ImovelPage({ params }: ImovelPageProps) {
       </div>
 
       {/* miniaturas clicáveis */}
-      {imovel.imagens?.length > 1 && (
+      {imovel.imagens?.length > 0 && (
         <div className="flex gap-2 overflow-x-auto px-4 mt-4 pb-2 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
-          {imovel.imagens.map((img: any) => (
+          {imovel.imagens.map((img: ImovelImagem) => (
             <div
               key={img.id}
-              className={`relative w-32 h-20 flex-shrink-0 rounded-md overflow-hidden border-2 cursor-pointer ${mainImage === img.url ? "border-primary" : "border-transparent"
+              className={`relative w-32 h-20 flex-shrink-0 rounded-md overflow-hidden border-2 cursor-pointer transition ${mainImage === img.url ? "border-primary" : "border-transparent hover:border-gray-600"
                 }`}
               onClick={() => setMainImage(img.url)}
             >
               <Image src={img.url} alt="Miniatura" fill className="object-cover" />
+
+              {/* Botão vermelho visível com leve transparência */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // evita trocar imagem principal
+                  setImagemSelecionada(img);
+                  setOpenDialog(true);
+                }}
+                className="absolute top-1 right-1 bg-red-600/80 hover:bg-red-700 text-white p-1.5 rounded-full shadow-md opacity-70"
+                title="Excluir imagem"
+              >
+                <Trash className="w-4 h-4" />
+              </button>
             </div>
           ))}
         </div>
@@ -119,6 +152,46 @@ export default function ImovelPage({ params }: ImovelPageProps) {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+        <DialogContent className="bg-neutral-900 border border-neutral-800 text-gray-200 w-[90%]">
+          <DialogHeader>
+            <DialogTitle>Excluir imagem</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-gray-400 mt-2">
+            Tem certeza que deseja excluir esta imagem? Esta ação não poderá ser desfeita.
+          </p>
+
+          {imagemSelecionada && (
+            <div className="relative w-full h-32 mt-4 rounded-md overflow-hidden">
+              <Image
+                src={imagemSelecionada.url}
+                alt="Imagem selecionada"
+                fill
+                className="object-cover"
+              />
+            </div>
+          )}
+
+          <DialogFooter className="mt-4 flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setOpenDialog(false)}>
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={async () => {
+                if (imagemSelecionada) {
+                  await handleDeleteImagem(imagemSelecionada.id);
+                  setOpenDialog(false);
+                  setImagemSelecionada(null);
+                }
+              }}
+            >
+              Excluir
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

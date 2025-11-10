@@ -58,11 +58,11 @@ model Imovel {
 model ImovelImagem {
   id        String   @id @default(cuid())
   imovelId  String
-  imovel    Imovel   @relation(fields: [imovelId], references: [id], onDelete: Cascade)
   url       String
+  publicId  String
   descricao String?
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  imovel    Imovel   @relation(fields: [imovelId], references: [id])
 }
 
 model Pedido {

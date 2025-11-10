@@ -92,14 +92,26 @@ async function main() {
 
   const imoveisCriados = await prisma.imovel.findMany();
 
-  // === IMAGENS ===
   await prisma.imovelImagem.createMany({
     data: [
-      { imovelId: imoveisCriados[0].id, url: "/uploads/imoveis/1/fachada.jpg", descricao: "Fachada principal" },
-      { imovelId: imoveisCriados[0].id, url: "/uploads/imoveis/1/sala.jpg", descricao: "Sala ampla" },
-      { imovelId: imoveisCriados[1].id, url: "/uploads/imoveis/2/cozinha.jpg", descricao: "Cozinha moderna" },
-      { imovelId: imoveisCriados[2].id, url: "/uploads/imoveis/3/quarto.jpg", descricao: "Quarto reformado" },
-      { imovelId: imoveisCriados[3].id, url: "/uploads/imoveis/4/jardim.jpg", descricao: "Área externa" },
+      {
+        imovelId: imoveisCriados[0].id,
+        url: "https://res.cloudinary.com/demo/image/upload/v123456789/imoveis/1_capa.jpg",
+        publicId: "imoveis/1_capa",
+        descricao: "Fachada principal",
+      },
+      {
+        imovelId: imoveisCriados[1].id,
+        url: "https://res.cloudinary.com/demo/image/upload/v123456789/imoveis/2_capa.jpg",
+        publicId: "imoveis/2_capa",
+        descricao: "Vista frontal",
+      },
+      {
+        imovelId: imoveisCriados[2].id,
+        url: "https://res.cloudinary.com/demo/image/upload/v123456789/imoveis/3_capa.jpg",
+        publicId: "imoveis/3_capa",
+        descricao: "Sala reformada",
+      },
     ],
   });
 

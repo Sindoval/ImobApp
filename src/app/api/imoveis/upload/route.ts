@@ -45,16 +45,15 @@ export async function POST(req: Request) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // decide pasta no cloudinary
     const folder = `/imoveis/${imovelId}`;
 
     const uploadResult = await uploadToCloudinary(buffer, folder);
 
-    // salva no banco
     const img = await db.imovelImagem.create({
       data: {
         imovelId,
         url: uploadResult.secure_url,
+        publicId: uploadResult.public_id,
         descricao: null,
       },
     });
