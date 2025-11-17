@@ -12,8 +12,11 @@ import UploadImovelImagem from "@/app/_components/upload-imovel-imagem";
 import { ImovelComImagens } from "@/app/_types/estoque";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { ImovelImagem } from "@/generated/prisma";
+import { Fornecedor, ImovelImagem } from "@/generated/prisma";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/app/_components/ui/dialog";
+import { Input } from "@/app/_components/ui/input";
+import { AddPedidoDialog } from "@/app/_components/add-pedido-dialog";
+import { getFornecedores } from "@/app/_actions/fornecedores";
 
 interface ImovelPageProps {
   params: { id: string };
@@ -22,9 +25,11 @@ interface ImovelPageProps {
 export default function ImovelPage({ params }: ImovelPageProps) {
   const { id } = params;
   const [imovel, setImovel] = useState<ImovelComImagens | null>(null);
+  const [fornecedores, setfornecedores] = useState<Fornecedor[]>();
   const [mainImage, setMainImage] = useState<string | null>(null);
   const [imagemSelecionada, setImagemSelecionada] = useState<ImovelImagem | null>(null);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openImageDialog, setOpenImageDialog] = useState(false);
+  const [openPedidoDialog, setOpenPedidoDialog] = useState(false);
   const router = useRouter();
 
   async function fetchImovel() {
@@ -37,8 +42,14 @@ export default function ImovelPage({ params }: ImovelPageProps) {
     }
   }
 
+  async function fetchFornecedores() {
+    const data = await getFornecedores();
+    setfornecedores(data);
+  }
+
   useEffect(() => {
     fetchImovel();
+    fetchFornecedores();
   }, []);
 
   async function handleDeleteImagem(imagemId: string) {
@@ -52,6 +63,10 @@ export default function ImovelPage({ params }: ImovelPageProps) {
     } else {
       toast.error(data.error || "Erro ao excluir imagem");
     }
+  }
+
+  function handlePedidoDialog(open: boolean) {
+    setOpenPedidoDialog(open)
   }
 
   if (!imovel) return <div className="text-center text-gray-300 mt-10">Carregando...</div>;
@@ -104,7 +119,7 @@ export default function ImovelPage({ params }: ImovelPageProps) {
                 onClick={(e) => {
                   e.stopPropagation(); // evita trocar imagem principal
                   setImagemSelecionada(img);
-                  setOpenDialog(true);
+                  setOpenImageDialog(true);
                 }}
                 className="absolute top-1 right-1 bg-red-600/80 hover:bg-red-700 text-white p-1.5 rounded-full shadow-md opacity-70"
                 title="Excluir imagem"
@@ -153,7 +168,7 @@ export default function ImovelPage({ params }: ImovelPageProps) {
         </Card>
       </div>
 
-      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+      <Dialog open={openImageDialog} onOpenChange={setOpenImageDialog}>
         <DialogContent className="bg-neutral-900 border border-neutral-800 text-gray-200 w-[90%]">
           <DialogHeader>
             <DialogTitle>Excluir imagem</DialogTitle>
@@ -174,7 +189,7 @@ export default function ImovelPage({ params }: ImovelPageProps) {
           )}
 
           <DialogFooter className="mt-4 flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setOpenDialog(false)}>
+            <Button variant="outline" onClick={() => setOpenImageDialog(false)}>
               Cancelar
             </Button>
             <Button
@@ -182,7 +197,7 @@ export default function ImovelPage({ params }: ImovelPageProps) {
               onClick={async () => {
                 if (imagemSelecionada) {
                   await handleDeleteImagem(imagemSelecionada.id);
-                  setOpenDialog(false);
+                  setOpenImageDialog(false);
                   setImagemSelecionada(null);
                 }
               }}
@@ -192,6 +207,13 @@ export default function ImovelPage({ params }: ImovelPageProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <AddPedidoDialog
+        imovelId={id}
+        openPedidoDialog={openPedidoDialog}
+        handlePedidoDialog={handlePedidoDialog}
+        fornecedores={fornecedores}
+      />
     </div>
   );
 }

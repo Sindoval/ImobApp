@@ -16,7 +16,7 @@ async function main() {
   await prisma.role.deleteMany();
 
   // === ROLES ===
-  const roles = await prisma.role.createMany({
+  await prisma.role.createMany({
     data: [
       { nome: "adm" },
       { nome: "engenheiro" },
@@ -28,10 +28,10 @@ async function main() {
   const [admRole, engenheiroRole, financeiroRole, investidorRole] =
     await prisma.role.findMany();
 
-  const senhaHash = "12345678"; // lembre-se: usar bcrypt em produção
+  const senhaHash = "12345678";
 
   // === USUÁRIOS ===
-  const usuarios = await prisma.usuario.createMany({
+  await prisma.usuario.createMany({
     data: [
       { nome: "Administrador Geral", email: "adm@imob.com", senhaHash, roleId: admRole.id },
       { nome: "Maria Engenheira", email: "maria@engenharia.com", senhaHash, roleId: engenheiroRole.id },
@@ -45,7 +45,7 @@ async function main() {
   const [adm, maria, joao, fernanda, carlos, ana] = await prisma.usuario.findMany();
 
   // === FORNECEDORES ===
-  const fornecedores = await prisma.fornecedor.createMany({
+  await prisma.fornecedor.createMany({
     data: [
       { nome: "Construmax Materiais", contato: "(11) 99999-0000 | construmax@email.com" },
       { nome: "Leroy Merlin", contato: "(11) 4004-1234 | leroy@merlin.com" },
@@ -57,7 +57,7 @@ async function main() {
   const fornecedoresCriados = await prisma.fornecedor.findMany();
 
   // === IMÓVEIS ===
-  const imoveis = await prisma.imovel.createMany({
+  await prisma.imovel.createMany({
     data: [
       {
         endereco: "Rua das Flores, 123 - Jardim Paulista, São Paulo/SP",
@@ -115,8 +115,8 @@ async function main() {
     ],
   });
 
-  // === PRODUTOS ===
-  const produtos = await prisma.produto.createMany({
+  // === PRODUTOS (AINDA EXISTEM PARA O ESTOQUE) ===
+  await prisma.produto.createMany({
     data: [
       { nome: "Cimento CP II", descricao: "Saco 50kg", unidade: "saco" },
       { nome: "Tinta Acrílica", descricao: "Lata 18L branco", unidade: "lata" },
@@ -131,7 +131,7 @@ async function main() {
 
   const produtosCriados = await prisma.produto.findMany();
 
-  // === ESTOQUE ===
+  // === ESTOQUE (PERMANECE IGUAL) ===
   await prisma.estoque.createMany({
     data: [
       { produtoId: produtosCriados[0].id, quantidade: 250 },
@@ -182,31 +182,24 @@ async function main() {
     },
   });
 
-  // === ITENS DOS PEDIDOS ===
+  // === PEDIDO ITEMS (AGORA SEM produtoId) ===
   await prisma.pedidoItem.createMany({
     data: [
       // Pedido 1
-      { pedidoId: pedido1.id, produtoId: produtosCriados[2].id, quantidade: 20, precoUnit: 46.9 },
-      { pedidoId: pedido1.id, produtoId: produtosCriados[1].id, quantidade: 4, precoUnit: 175.0 },
+      { pedidoId: pedido1.id, nome: "Piso Cerâmico 1.44m²", quantidade: 20, precoUnit: 46.9 },
+      { pedidoId: pedido1.id, nome: "Tinta Acrílica 18L", quantidade: 4, precoUnit: 175.0 },
 
       // Pedido 2
-      { pedidoId: pedido2.id, produtoId: produtosCriados[0].id, quantidade: 100, precoUnit: 31.9 },
-      { pedidoId: pedido2.id, produtoId: produtosCriados[3].id, quantidade: 50, precoUnit: 25.5 },
+      { pedidoId: pedido2.id, nome: "Cimento CP II 50kg", quantidade: 100, precoUnit: 31.9 },
+      { pedidoId: pedido2.id, nome: "Argamassa AC-II 20kg", quantidade: 50, precoUnit: 25.5 },
 
       // Pedido 3
-      { pedidoId: pedido3.id, produtoId: produtosCriados[6].id, quantidade: 5, precoUnit: 310.0 },
-      { pedidoId: pedido3.id, produtoId: produtosCriados[7].id, quantidade: 200, precoUnit: 3.5 },
+      { pedidoId: pedido3.id, nome: "Porta de Madeira", quantidade: 5, precoUnit: 310.0 },
+      { pedidoId: pedido3.id, nome: "Telha Cerâmica Colonial", quantidade: 200, precoUnit: 3.5 },
     ],
   });
 
-  // === LOG FINAL ===
   console.log("✅ Seed completo criado com sucesso!");
-  console.log(`👥 Usuários: ${await prisma.usuario.count()}`);
-  console.log(`🏢 Imóveis: ${await prisma.imovel.count()}`);
-  console.log(`📦 Produtos: ${await prisma.produto.count()}`);
-  console.log(`🏪 Fornecedores: ${await prisma.fornecedor.count()}`);
-  console.log(`🧾 Pedidos: ${await prisma.pedido.count()}`);
-  console.log(`📊 Itens de Pedido: ${await prisma.pedidoItem.count()}`);
 }
 
 main()

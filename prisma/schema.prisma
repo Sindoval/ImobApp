@@ -66,45 +66,46 @@ model ImovelImagem {
 }
 
 model Pedido {
-  id               String       @id @default(cuid())
+  id               String  @id @default(cuid())
   descricao        String
   status           String
   notaFiscalUrl    String?
-  diretoParaImovel Boolean      @default(false)
+  diretoParaImovel Boolean @default(false)
   imovelId         String?
-  imovel           Imovel?      @relation(fields: [imovelId], references: [id], onDelete: Cascade)
-  fornecedorId     String
-  fornecedor       Fornecedor   @relation(fields: [fornecedorId], references: [id], onDelete: Cascade)
-  criadoPorId      String
-  criadoPor        Usuario      @relation("PedidosCriados", fields: [criadoPorId], references: [id], onDelete: Cascade)
-  aprovadoPorId    String?
-  aprovadoPor      Usuario?     @relation("PedidosAprovados", fields: [aprovadoPorId], references: [id], onDelete: SetNull)
-  itens            PedidoItem[]
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
+  imovel           Imovel? @relation(fields: [imovelId], references: [id], onDelete: Cascade)
+
+  fornecedorId String?
+  fornecedor   Fornecedor? @relation(fields: [fornecedorId], references: [id], onDelete: SetNull)
+
+  criadoPorId String
+  criadoPor   Usuario @relation("PedidosCriados", fields: [criadoPorId], references: [id], onDelete: Cascade)
+
+  aprovadoPorId String?
+  aprovadoPor   Usuario? @relation("PedidosAprovados", fields: [aprovadoPorId], references: [id], onDelete: SetNull)
+
+  itens     PedidoItem[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 }
 
 model PedidoItem {
-  id         String   @id @default(cuid())
-  pedidoId   String
-  pedido     Pedido   @relation(fields: [pedidoId], references: [id], onDelete: Cascade)
-  produtoId  String
-  produto    Produto  @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  id         String @id @default(cuid())
+  nome       String
   quantidade Int
   precoUnit  Float
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+
+  pedidoId String
+  pedido   Pedido @relation(fields: [pedidoId], references: [id])
 }
 
 model Produto {
-  id          String       @id @default(cuid())
-  nome        String
-  descricao   String?
-  unidade     String
-  estoque     Estoque?
-  itensPedido PedidoItem[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id        String   @id @default(cuid())
+  nome      String
+  descricao String?
+  unidade   String
+  estoque   Estoque?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Estoque {
