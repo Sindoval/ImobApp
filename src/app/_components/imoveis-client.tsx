@@ -21,13 +21,17 @@ const ImoveisClient = ({ imoveis }: ImoveisProps) => {
     setIsDialogOpen(false);
   }
 
+  const handleImovelFilter = (imoveis: ImovelComImagens[]) => {
+    setListaImoveis(imoveis);
+  }
+
   useEffect(() => {
     setListaImoveis(imoveis);
   }, [imoveis])
 
   return (
     <>
-      <MenuFilter />
+      <MenuFilter imoveis={imoveis} handleImovelFilter={handleImovelFilter} />
 
       <div className="w-[80%] my-4 ">
         <Button

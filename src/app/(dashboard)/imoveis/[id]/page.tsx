@@ -5,7 +5,7 @@ import { getImovelById } from "@/app/_actions/imoveis";
 import { Badge } from "@/app/_components/ui/badge";
 import { Button } from "@/app/_components/ui/button";
 import { Card, CardContent, CardHeader } from "@/app/_components/ui/card";
-import { ArrowDown, Captions, ChevronLeft, FileText, Trash } from "lucide-react";
+import { ArrowDown, Captions, ChevronLeft, FileText, SquarePen, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import UploadImovelImagem from "@/app/_components/upload-imovel-imagem";
@@ -17,6 +17,8 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { Input } from "@/app/_components/ui/input";
 import { AddPedidoDialog } from "@/app/_components/add-pedido-dialog";
 import { getFornecedores } from "@/app/_actions/fornecedores";
+import HandleVisaoDialog from "@/app/_components/handle-visao-dialog";
+import HandleStatusDialog from "@/app/_components/handle-status-dialog";
 
 interface ImovelPageProps {
   params: { id: string };
@@ -30,6 +32,9 @@ export default function ImovelPage({ params }: ImovelPageProps) {
   const [imagemSelecionada, setImagemSelecionada] = useState<ImovelImagem | null>(null);
   const [openImageDialog, setOpenImageDialog] = useState(false);
   const [openPedidoDialog, setOpenPedidoDialog] = useState(false);
+  const [openVisaoDialog, setOpenVisaoDialog] = useState(false);
+  const [openStatusDialog, setOpenStatusDialog] = useState(false);
+
   const router = useRouter();
 
   async function fetchImovel() {
@@ -66,7 +71,37 @@ export default function ImovelPage({ params }: ImovelPageProps) {
   }
 
   function handlePedidoDialog(open: boolean) {
-    setOpenPedidoDialog(open)
+    setOpenPedidoDialog(open);
+  }
+
+  function handleVisaoDialog(open: boolean) {
+    setOpenVisaoDialog(open);
+  }
+
+  function handleStatusDialog(open: boolean) {
+    setOpenStatusDialog(open);
+  }
+
+  function handleDescriptionUpdate(newDescription: string) {
+    setImovel((prev) => {
+      if (!prev) return null;
+
+      return {
+        ...prev,
+        descricao: newDescription,
+      };
+    })
+  }
+
+  function handleStatusUpdate(newStatus: string) {
+    setImovel((prev) => {
+      if (!prev) return null;
+
+      return {
+        ...prev,
+        status: newStatus,
+      };
+    })
   }
 
   if (!imovel) return <div className="text-center text-gray-300 mt-10">Carregando...</div>;
@@ -134,7 +169,13 @@ export default function ImovelPage({ params }: ImovelPageProps) {
       {/* informações gerais */}
       <div className="px-4 mt-5">
         <Card className="my-3">
-          <CardContent className="p-5">
+          <CardContent className="p-5 relative">
+            <Button
+              className="absolute top-5 right-5"
+              variant="link"
+              onClick={() => handleVisaoDialog(true)}
+            >
+              <SquarePen /></Button>
             <CardHeader className="flex-row items-center gap-4 p-0">
               <Captions className="text-primary w-8 h-8" />
               <h3 className="text-white text-lg font-semibold">Visão Geral do Imóvel</h3>
@@ -145,10 +186,19 @@ export default function ImovelPage({ params }: ImovelPageProps) {
           </CardContent>
         </Card>
 
-        <Card className="my-3">
-          <CardContent className="px-5 flex justify-between items-center">
+        <Card className="my-3 ">
+          <CardContent className="px-5 flex-col justify-between items-center">
+            <div className="w-full relative">
+              <Button
+                className="absolute top-1 right-0"
+                variant="link"
+                onClick={() => setOpenStatusDialog(true)}
+              >
+                <SquarePen /></Button>
+
+            </div>
             <p className="text-sm text-gray-400 mt-4">Status da reforma</p>
-            <Badge className="mt-auto">{imovel?.status}</Badge>
+            <Badge className="mt-auto px-6">{imovel?.status}</Badge>
           </CardContent>
         </Card>
 
@@ -213,6 +263,22 @@ export default function ImovelPage({ params }: ImovelPageProps) {
         openPedidoDialog={openPedidoDialog}
         handlePedidoDialog={handlePedidoDialog}
         fornecedores={fornecedores}
+      />
+
+      <HandleVisaoDialog
+        openVisaoDialog={openVisaoDialog}
+        handleVisaoDialog={handleVisaoDialog}
+        id={imovel.id}
+        descricao={imovel.descricao}
+        handleDescriptionUpdate={handleDescriptionUpdate}
+      />
+
+      <HandleStatusDialog
+        openStatusDialog={openStatusDialog}
+        handleStatusDialog={handleStatusDialog}
+        id={imovel.id}
+        status={imovel.status}
+        handleStatusUpdate={handleStatusUpdate}
       />
     </div>
   );
