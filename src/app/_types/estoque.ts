@@ -9,7 +9,7 @@ export type ImovelComImagens = Prisma.ImovelGetPayload<{
 }>;
 
 export type PedidoInfo = Prisma.PedidoGetPayload<{
-  include: { criadoPor: true, fornecedor: true, imovel: true }
+  include: { criadoPor: true, fornecedor: true, imovel: true, itens: true }
 }>
 
 export type UserComRole = Prisma.UsuarioGetPayload<{

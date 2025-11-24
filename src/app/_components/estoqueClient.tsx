@@ -5,14 +5,15 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useEffect, useMemo, useState } from "react";
 import CardEstoque from "./card-estoque";
-import { EstoqueComProduto } from "../_types/estoque";
+import { EstoqueComProduto, ImovelComImagens } from "../_types/estoque";
 import AddProductDialog from "./add-product-dialog";
 
 interface EstoqueClientProps {
   estoqueList: EstoqueComProduto[]
+  imoveisList: ImovelComImagens[]
 }
 
-const EstoqueClient = ({ estoqueList }: EstoqueClientProps) => {
+const EstoqueClient = ({ estoqueList, imoveisList }: EstoqueClientProps) => {
   const [search, setSearch] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [listaEstoque, setListaEstoque] = useState(estoqueList);
@@ -22,9 +23,9 @@ const EstoqueClient = ({ estoqueList }: EstoqueClientProps) => {
   }, [listaEstoque]);
 
   const handleAddEstoque = (novoEstoque: EstoqueComProduto) => {
-      setListaEstoque((prev) => [...prev, novoEstoque]);
-      setIsDialogOpen(false);
-    }
+    setListaEstoque((prev) => [...prev, novoEstoque]);
+    setIsDialogOpen(false);
+  }
 
   const filteredList = useMemo(() => {
     const term = search.toLowerCase();
@@ -51,12 +52,12 @@ const EstoqueClient = ({ estoqueList }: EstoqueClientProps) => {
       <h2 className="text-xl font-bold text-gray-200 py-3">Itens no Estoque</h2>
 
       <div className="w-[80%] my-4 ">
-              <Button
-                className="px-3"
-                variant="secondary"
-                onClick={() => setIsDialogOpen(true)}
-              >+ Adicionar Produto ao Estoque</ Button>
-            </div>
+        <Button
+          className="px-3"
+          variant="secondary"
+          onClick={() => setIsDialogOpen(true)}
+        >+ Adicionar Produto ao Estoque</ Button>
+      </div>
 
       {/* lista do estoque */}
       <div className="w-full h-[70%] flex-col mt-10 overflow-y-auto no-scrollbar">
@@ -65,17 +66,18 @@ const EstoqueClient = ({ estoqueList }: EstoqueClientProps) => {
             <CardEstoque
               key={e.id}
               estoqueItem={e}
+              imoveis={imoveisList}
             />
           ))
         ) : (
           <p className="text-gray-400 text-center mt-5">Nenhum item encontrado.</p>
         )}
       </div>
-        <AddProductDialog 
-          open={isDialogOpen}
-          onChangeOpen={setIsDialogOpen}
-          ondAdd={handleAddEstoque}
-          />
+      <AddProductDialog
+        open={isDialogOpen}
+        onChangeOpen={setIsDialogOpen}
+        ondAdd={handleAddEstoque}
+      />
     </div>
   );
 }

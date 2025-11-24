@@ -13,7 +13,7 @@ const Header = () => {
   return (
     <Card className="w-full">
       <CardContent className="p-3 flex flex-row items-center justify-between">
-        <Link href={"/"}>
+        <Link href={token ? "/dashboard" : "/"}>
           <Image
             alt="Imob. logo"
             src="/imob-logo2.png"

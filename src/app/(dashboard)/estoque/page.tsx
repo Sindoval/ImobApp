@@ -1,4 +1,5 @@
 import { getEstoque } from "@/app/_actions/estoque";
+import { getImoveis } from "@/app/_actions/imoveis";
 import EstoqueClient from "@/app/_components/estoqueClient";
 import Header from "@/app/_components/header";
 
@@ -6,13 +7,14 @@ export const dynamic = "force-dynamic"; // 🚀 desativa cache na Vercel
 
 const Estoque = async () => {
   const estoque = await getEstoque();
+  const imoveis = await getImoveis();
 
   return (
     <div className="flex flex-col items-center h-screen">
       <Header />
       <h1 className="text-2xl font-bold text-gray-200 py-3">Estoque de Materiais</h1>
       <hr className="w-full" />
-      <EstoqueClient estoqueList={estoque} />
+      <EstoqueClient estoqueList={estoque} imoveisList={imoveis} />
 
     </div>
   );

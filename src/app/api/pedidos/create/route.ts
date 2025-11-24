@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     const pedido = await db.pedido.create({
       data: {
         descricao,
-        status: "PENDENTE",
+        status: "Pendente",
         diretoParaImovel: doEstoque,
         fornecedorId: doEstoque ? null : fornecedorId,
         imovelId,
