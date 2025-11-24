@@ -97,14 +97,12 @@ export function AddPedidoDialog({ imovelId, fornecedores, openPedidoDialog, hand
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      toast.success("Pedido Criado com sucesso!")
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err?.message || "Erro ao criar pedido");
       }
-
-      // sucesso
+      toast.success("Pedido Criado com sucesso!")
       handlePedidoDialog(false);
       reset();
     } catch (error) {

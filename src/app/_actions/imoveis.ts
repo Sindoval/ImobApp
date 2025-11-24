@@ -20,7 +20,7 @@ export async function getImovelById(id: string) {
   try {
     return await db.imovel.findUnique({
       where: { id },
-      include: { imagens: true }
+      include: { imagens: true, documentos: true, engenheiro: true }
     });
   } catch (error) {
     console.error(error);

@@ -5,8 +5,11 @@ import { Button } from "./ui/button";
 import { MenuIcon } from "lucide-react";
 import { Sheet, SheetTrigger } from "./ui/sheet";
 import SidebarButton from "./imob-sheet";
+import { cookies } from "next/headers";
 
 const Header = () => {
+  const cookieStore = cookies();
+  const token = cookieStore.get("token")?.value;
   return (
     <Card className="w-full">
       <CardContent className="p-3 flex flex-row items-center justify-between">
@@ -18,14 +21,17 @@ const Header = () => {
             width={110}
           />
         </Link>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="ghost" >
-              <MenuIcon />
-            </Button>
-          </SheetTrigger>
-          <SidebarButton />
-        </Sheet>
+        {token && (
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" >
+                <MenuIcon />
+              </Button>
+            </SheetTrigger>
+            <SidebarButton />
+          </Sheet>
+        )}
+
 
       </CardContent>
     </Card>

@@ -50,6 +50,7 @@ model Imovel {
   engenheiroId String
   engenheiro   Usuario        @relation("ImovelEngenheiro", fields: [engenheiroId], references: [id], onDelete: Cascade)
   imagens      ImovelImagem[]
+  documentos   Documento[]
   pedidos      Pedido[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
@@ -63,6 +64,15 @@ model ImovelImagem {
   descricao String?
   createdAt DateTime @default(now())
   imovel    Imovel   @relation(fields: [imovelId], references: [id])
+}
+
+model Documento {
+  id        String   @id @default(cuid())
+  nome      String
+  url       String
+  imovelId  String
+  imovel    Imovel   @relation(fields: [imovelId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
 
 model Pedido {

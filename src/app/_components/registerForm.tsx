@@ -6,6 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import { PasswordInput } from "./password-input";
 
 const registerSchema = z.object({
   nome: z.string().nonempty("O nome é obrigatório"),
@@ -49,7 +50,7 @@ function RegisterForm() {
           })
         });
 
-        router.push("/imoveis");
+        router.push("/dashboard");
       }
 
     } catch (error) {
@@ -91,7 +92,7 @@ function RegisterForm() {
             <FormItem className="mb-5">
               <FormLabel>Senha</FormLabel>
               <FormControl>
-                <Input placeholder="********" type="password" {...field} />
+                <PasswordInput placeholder="********" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -103,7 +104,7 @@ function RegisterForm() {
             <FormItem className="mb-5">
               <FormLabel>Confirmar Senha</FormLabel>
               <FormControl>
-                <Input placeholder="********" type="password" {...field} />
+                <PasswordInput placeholder="********" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

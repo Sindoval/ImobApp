@@ -9,6 +9,7 @@ import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
+import { PasswordInput } from "./password-input";
 
 const loginSchema = z.object({
   email: z
@@ -40,7 +41,7 @@ const LoginForm = () => {
     })
 
     if (res.ok) {
-      router.push("/imoveis")
+      router.push("/dashboard")
     } else {
       toast.error("Email ou senha incorretos")
     }
@@ -72,7 +73,7 @@ const LoginForm = () => {
             <FormItem className="mb-8">
               <FormLabel>Senha</FormLabel>
               <FormControl>
-                <Input placeholder="********" type="password"{...field} />
+                <PasswordInput placeholder="********" {...field} />
               </FormControl>
               <FormMessage />
               <div className="flex justify-end pt-0 pb-2">

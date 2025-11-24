@@ -10,6 +10,7 @@ async function main() {
   await prisma.estoque.deleteMany();
   await prisma.produto.deleteMany();
   await prisma.fornecedor.deleteMany();
+  await prisma.documento.deleteMany();
   await prisma.imovelImagem.deleteMany();
   await prisma.imovel.deleteMany();
   await prisma.usuario.deleteMany();
@@ -47,10 +48,10 @@ async function main() {
   // === FORNECEDORES ===
   await prisma.fornecedor.createMany({
     data: [
-      { nome: "Construmax Materiais", contato: "(11) 99999-0000 | construmax@email.com" },
-      { nome: "Leroy Merlin", contato: "(11) 4004-1234 | leroy@merlin.com" },
-      { nome: "Telhanorte", contato: "(11) 3003-4040 | telhanorte@email.com" },
-      { nome: "Cimento Nacional", contato: "(11) 3333-5555 | vendas@cimentonacional.com" },
+      { nome: "Construmax Materiais", contato: "(11) 99999-0000" },
+      { nome: "Leroy Merlin", contato: "(11) 4004-1234" },
+      { nome: "Telhanorte", contato: "(11) 3003-4040" },
+      { nome: "Cimento Nacional", contato: "(11) 3333-5555" },
     ],
   });
 
@@ -92,110 +93,50 @@ async function main() {
 
   const imoveisCriados = await prisma.imovel.findMany();
 
-  await prisma.imovelImagem.createMany({
-    data: [
-      {
-        imovelId: imoveisCriados[0].id,
-        url: "https://res.cloudinary.com/demo/image/upload/v123456789/imoveis/1_capa.jpg",
-        publicId: "imoveis/1_capa",
-        descricao: "Fachada principal",
-      },
-      {
-        imovelId: imoveisCriados[1].id,
-        url: "https://res.cloudinary.com/demo/image/upload/v123456789/imoveis/2_capa.jpg",
-        publicId: "imoveis/2_capa",
-        descricao: "Vista frontal",
-      },
-      {
-        imovelId: imoveisCriados[2].id,
-        url: "https://res.cloudinary.com/demo/image/upload/v123456789/imoveis/3_capa.jpg",
-        publicId: "imoveis/3_capa",
-        descricao: "Sala reformada",
-      },
-    ],
-  });
+  // === IMAGENS DO IMÓVEL (VAZIO) ===
+  // nenhum createMany aqui
 
-  // === PRODUTOS (AINDA EXISTEM PARA O ESTOQUE) ===
+  // === DOCUMENTOS (VAZIO) ===
+  // nenhum createMany aqui
+
+  // === PRODUTOS ===
   await prisma.produto.createMany({
     data: [
       { nome: "Cimento CP II", descricao: "Saco 50kg", unidade: "saco" },
       { nome: "Tinta Acrílica", descricao: "Lata 18L branco", unidade: "lata" },
       { nome: "Piso Cerâmico", descricao: "Caixa 1.44m²", unidade: "caixa" },
       { nome: "Argamassa AC-II", descricao: "Saco 20kg", unidade: "saco" },
-      { nome: "Tijolo Cerâmico", descricao: "9x19x19cm", unidade: "unidade" },
-      { nome: "Tubo PVC 100mm", descricao: "Tubo 3m", unidade: "unidade" },
-      { nome: "Porta de Madeira", descricao: "0.80x2.10m", unidade: "unidade" },
-      { nome: "Telha Cerâmica", descricao: "Colonial", unidade: "unidade" },
     ],
   });
 
   const produtosCriados = await prisma.produto.findMany();
 
-  // === ESTOQUE (PERMANECE IGUAL) ===
   await prisma.estoque.createMany({
     data: [
       { produtoId: produtosCriados[0].id, quantidade: 250 },
       { produtoId: produtosCriados[1].id, quantidade: 90 },
       { produtoId: produtosCriados[2].id, quantidade: 60 },
       { produtoId: produtosCriados[3].id, quantidade: 300 },
-      { produtoId: produtosCriados[4].id, quantidade: 15000 },
-      { produtoId: produtosCriados[5].id, quantidade: 120 },
-      { produtoId: produtosCriados[6].id, quantidade: 35 },
-      { produtoId: produtosCriados[7].id, quantidade: 700 },
     ],
   });
 
   // === PEDIDOS ===
   const pedido1 = await prisma.pedido.create({
     data: {
-      descricao: "Materiais para cozinha e piso do imóvel 1",
+      descricao: "Materiais para cozinha",
       status: "aprovado",
       imovelId: imoveisCriados[0].id,
       criadoPorId: maria.id,
       aprovadoPorId: fernanda.id,
       fornecedorId: fornecedoresCriados[0].id,
-      notaFiscalUrl: "/uploads/notas/nota_cozinha.pdf",
+      notaFiscalUrl: "/uploads/notas/nota1.pdf",
       diretoParaImovel: true,
     },
   });
 
-  const pedido2 = await prisma.pedido.create({
-    data: {
-      descricao: "Reposição de cimento e argamassa para estoque",
-      status: "entregue",
-      criadoPorId: fernanda.id,
-      fornecedorId: fornecedoresCriados[1].id,
-      notaFiscalUrl: "/uploads/notas/nota_estoque.pdf",
-      diretoParaImovel: false,
-    },
-  });
-
-  const pedido3 = await prisma.pedido.create({
-    data: {
-      descricao: "Telhas e madeira para cobertura do imóvel 4",
-      status: "pendente",
-      imovelId: imoveisCriados[3].id,
-      criadoPorId: joao.id,
-      fornecedorId: fornecedoresCriados[2].id,
-      notaFiscalUrl: "/uploads/notas/nota_telhas.pdf",
-      diretoParaImovel: true,
-    },
-  });
-
-  // === PEDIDO ITEMS (AGORA SEM produtoId) ===
   await prisma.pedidoItem.createMany({
     data: [
-      // Pedido 1
-      { pedidoId: pedido1.id, nome: "Piso Cerâmico 1.44m²", quantidade: 20, precoUnit: 46.9 },
-      { pedidoId: pedido1.id, nome: "Tinta Acrílica 18L", quantidade: 4, precoUnit: 175.0 },
-
-      // Pedido 2
-      { pedidoId: pedido2.id, nome: "Cimento CP II 50kg", quantidade: 100, precoUnit: 31.9 },
-      { pedidoId: pedido2.id, nome: "Argamassa AC-II 20kg", quantidade: 50, precoUnit: 25.5 },
-
-      // Pedido 3
-      { pedidoId: pedido3.id, nome: "Porta de Madeira", quantidade: 5, precoUnit: 310.0 },
-      { pedidoId: pedido3.id, nome: "Telha Cerâmica Colonial", quantidade: 200, precoUnit: 3.5 },
+      { pedidoId: pedido1.id, nome: "Piso Cerâmico", quantidade: 20, precoUnit: 46.9 },
     ],
   });
 

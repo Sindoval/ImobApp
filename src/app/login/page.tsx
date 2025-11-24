@@ -5,12 +5,11 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 const Login = async () => {
-
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value;
 
   if (token) {
-    redirect("/imoveis")
+    redirect("/dashboard");
   }
 
   return (

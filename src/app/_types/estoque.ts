@@ -5,5 +5,13 @@ export type EstoqueComProduto = Prisma.EstoqueGetPayload<{
 }>;
 
 export type ImovelComImagens = Prisma.ImovelGetPayload<{
-  include: { imagens: true }
+  include: { imagens: true, documentos: true, engenheiro: true }
 }>;
+
+export type PedidoInfo = Prisma.PedidoGetPayload<{
+  include: { criadoPor: true, fornecedor: true, imovel: true }
+}>
+
+export type UserComRole = Prisma.UsuarioGetPayload<{
+  include: { role: true }
+}>

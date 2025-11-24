@@ -21,8 +21,6 @@ const SidebarButton = () => {
     const fetchUser = async () => {
       const user = await fetch("/api/users/me");
       const data = await user.json();
-      console.log({dadosUsuario: data});
-      
       setUser(data.user);
     }
     fetchUser();
@@ -46,7 +44,7 @@ const SidebarButton = () => {
         {/* Buttons */}
         <div>
           <Button className="w-full justify-start" variant="ghost" asChild >
-            <Link href="/">
+            <Link href="/dashboard">
               <CircleChevronLeft /> Inicio
             </Link>
           </Button>

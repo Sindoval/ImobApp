@@ -5,7 +5,7 @@ import { getImovelById } from "@/app/_actions/imoveis";
 import { Badge } from "@/app/_components/ui/badge";
 import { Button } from "@/app/_components/ui/button";
 import { Card, CardContent, CardHeader } from "@/app/_components/ui/card";
-import { ArrowDown, Captions, ChevronLeft, FileText, SquarePen, Trash } from "lucide-react";
+import { ArrowDown, Captions, ChevronLeft, FilePlus, FileText, SquarePen, Trash } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import UploadImovelImagem from "@/app/_components/upload-imovel-imagem";
@@ -34,6 +34,8 @@ export default function ImovelPage({ params }: ImovelPageProps) {
   const [openPedidoDialog, setOpenPedidoDialog] = useState(false);
   const [openVisaoDialog, setOpenVisaoDialog] = useState(false);
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
+  const [openDocDialog, setOpenDocDialog] = useState(false);
+  const [docFile, setDocFile] = useState<File | null>(null);
 
   const router = useRouter();
 
@@ -47,14 +49,27 @@ export default function ImovelPage({ params }: ImovelPageProps) {
     }
   }
 
+  async function syncDocumentos() {
+    await fetch("/api/imoveis/documentos/sync", {
+      method: "POST",
+      body: JSON.stringify({ imovelId: id }),
+      headers: { "Content-Type": "application/json" }
+    });
+
+    await fetchImovel();
+  }
+
   async function fetchFornecedores() {
     const data = await getFornecedores();
     setfornecedores(data);
   }
 
   useEffect(() => {
-    fetchImovel();
-    fetchFornecedores();
+    async function load() {
+      await syncDocumentos();
+      await fetchFornecedores();
+    }
+    load();
   }, []);
 
   async function handleDeleteImagem(imagemId: string) {
@@ -187,6 +202,13 @@ export default function ImovelPage({ params }: ImovelPageProps) {
         </Card>
 
         <Card className="my-3 ">
+          <CardContent className="px-5 flex justify-between items-center">
+            <p className="text-sm text-gray-400 mt-4">Engenheiro Responsável</p>
+            <Badge className="mt-auto px-6 py-1" variant="secondary">{imovel?.engenheiro.nome}</Badge>
+          </CardContent>
+        </Card>
+
+        <Card className="my-3 ">
           <CardContent className="px-5 flex-col justify-between items-center">
             <div className="w-full relative">
               <Button
@@ -208,12 +230,37 @@ export default function ImovelPage({ params }: ImovelPageProps) {
               <FileText className="text-primary w-8 h-8" />
               <h3 className="text-white text-lg font-semibold">Documentação</h3>
             </CardHeader>
+
             <p className="text-sm text-gray-400 mt-4">
-              Disponível para download: Contrato de Compra e Venda, Planta Baixa, Memorial Descritivo.
+              Documentos anexados ao imóvel.
             </p>
-            <Button className="mt-4" variant="secondary">
-              <ArrowDown /> Baixar Documentação
+
+            {/* Botão adicionar documento */}
+            <Button variant="secondary" className="mt-4 w-60 flex justify-start" onClick={() => setOpenDocDialog(true)}>
+              <FilePlus className="mr-2" /> Adicionar Documento
             </Button>
+
+            {/* Botão baixar todos */}
+            <Button className="mt-4 w-60" variant="secondary" onClick={() => window.open(`/api/imoveis/documentos/download?id=${id}`)}>
+              <ArrowDown /> Baixar Documentação Completa
+            </Button>
+
+            {/* Lista de documentos */}
+            <div className="mt-4 space-y-2">
+              {imovel.documentos?.map((doc) => (
+                <div key={doc.id} className="flex justify-between items-center bg-secondary p-3 rounded-md">
+                  <span className="text-gray-300 text-sm">{doc.nome}</span>
+
+                  <Button
+                    onClick={() => window.open(doc.url)}
+                    className=""
+                  >
+                    <ArrowDown className="h-4 w-4 mr-1" /> Baixar
+                  </Button>
+                </div>
+              ))}
+            </div>
+
           </CardContent>
         </Card>
       </div>
@@ -280,6 +327,51 @@ export default function ImovelPage({ params }: ImovelPageProps) {
         status={imovel.status}
         handleStatusUpdate={handleStatusUpdate}
       />
+
+      <Dialog open={openDocDialog} onOpenChange={setOpenDocDialog}>
+        <DialogContent className="w-[90%] text-gray-200">
+          <DialogHeader>
+            <DialogTitle>Adicionar documentação</DialogTitle>
+          </DialogHeader>
+
+          <Input
+            type="file"
+            accept="application/pdf,image/*"
+            onChange={(e) => setDocFile(e.target.files?.[0] ?? null)}
+          />
+
+          <DialogFooter className="mt-4">
+            <Button variant="outline" className="mt-2" onClick={() => setOpenDocDialog(false)}>Cancelar</Button>
+
+            <Button
+              onClick={async () => {
+                if (!docFile) return toast.error("Selecione um arquivo");
+
+                const formData = new FormData();
+                formData.append("file", docFile);
+                formData.append("imovelId", imovel.id);
+
+                const res = await fetch("/api/imoveis/documentos/upload", {
+                  method: "POST",
+                  body: formData,
+                });
+
+                const data = await res.json();
+
+                if (data.ok) {
+                  toast.success("Documento enviado!");
+                  setOpenDocDialog(false);
+                  fetchImovel();
+                } else {
+                  toast.error(data.error);
+                }
+              }}
+            >
+              Enviar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
