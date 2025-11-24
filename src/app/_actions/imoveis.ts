@@ -6,7 +6,7 @@ export async function getImoveis() {
   try {
     const imoveis = await db.imovel.findMany(
       {
-        include: { imagens: true }
+        include: { imagens: true, documentos: true, engenheiro: true }
       }
     );
     return imoveis;
